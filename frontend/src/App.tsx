@@ -84,6 +84,18 @@ function App() {
     }
   }, [result]);
 
+  const [loadingDots, setLoadingDots] = useState(".");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLoadingDots((dots) =>
+        dots.length === 3 ? "" : dots + "."
+      );
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main className="modern-background min-h-screen px-4 py-10 text-slate-200 sm:px-6 sm:py-14">
       <div className="mx-auto max-w-6xl">
@@ -124,7 +136,16 @@ function App() {
               disabled={loading}
               className="modern-button rounded-xl px-7 py-3.5 text-sm font-semibold text-white"
             >
-              {loading ? "Looking up..." : "Lookup IP"}
+              {loading ? (
+                <>
+                  Looking up
+                  <span className="inline-block w-[18px] text-left">
+                    {loadingDots}
+                  </span>
+                </>
+              ) : (
+                "Lookup IP"
+              )}
             </button>
           </div>
         </form>
