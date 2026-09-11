@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ip-lookup-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ip_lookup
+    ports:
+      - "5432:5432"
+    volumes:
+      - ip_lookup_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  ip_lookup_postgres_data:
