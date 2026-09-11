@@ -56,15 +56,7 @@ docker -v
 docker compose version
 ```
 
-## 1. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-
-cd <your-repository-directory>
-```
-
-## 2. Install Dependencies
+## 1. Install Dependencies
 
 From the `backend` directory:
 
