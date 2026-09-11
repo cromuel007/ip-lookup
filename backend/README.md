@@ -108,6 +108,7 @@ The `.env.example` file contains:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ip_lookup?schema=public"
+FRONTEND_URL=http://localhost:5173
 PORT=3001
 ```
 
