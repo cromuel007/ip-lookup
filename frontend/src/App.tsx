@@ -149,7 +149,6 @@ function App() {
                   Lookup Result
                 </div>
 
-
                 <h2 className="mt-1 text-lg font-semibold text-white">
                   {result.ip}
                 </h2>
@@ -159,7 +158,6 @@ function App() {
                 Lookup successful
               </div>
 
-
             </div>
 
             <div className="grid gap-2.5 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-3">
@@ -167,7 +165,6 @@ function App() {
                 <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
                   IP Address
                 </p>
-
 
                 <p className="mt-1.5 break-all text-sm font-medium text-slate-200">
                   {result.ip}
