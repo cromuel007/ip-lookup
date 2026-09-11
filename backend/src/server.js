@@ -5,7 +5,6 @@ import rateLimit from "express-rate-limit";
 import ipRoutes from "./routes/ipRoutes.js";
 
 const app = express();
-
 const PORT = process.env.PORT || 3001;
 
 app.set("trust proxy", 1);
