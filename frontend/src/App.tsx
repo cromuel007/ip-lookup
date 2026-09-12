@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import * as Flags from "country-flag-icons/react/3x2";
 import IpMap from "./components/IpMap";
-import { lookupIp } from "./services/ipApi";
+import { getMyIp, lookupIp } from "./services/ipApi";
 import type { IpLookupResponse } from "./types/ip";
 
 function CountryFlag({
@@ -37,22 +37,24 @@ function CountryFlag({
 }
 
 function App() {
+  // IP currently being searched
   const [ip, setIp] = useState("");
+
+  // Visitor's detected IP - never changed by the input
+  const [myIp, setMyIp] = useState("");
+
   const [result, setResult] =
     useState<IpLookupResponse | null>(null);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [loadingDots, setLoadingDots] = useState(".");
   const resultRef = useRef<HTMLElement | null>(null);
 
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault();
+  async function performLookup(value: string) {
+    const trimmedValue = value.trim();
 
-    const value = ip.trim();
-
-    if (!value) {
+    if (!trimmedValue) {
       setError("Please enter an IP address.");
       return;
     }
@@ -62,7 +64,7 @@ function App() {
     setResult(null);
 
     try {
-      const data = await lookupIp(value);
+      const data = await lookupIp(trimmedValue);
       setResult(data);
     } catch (err) {
       setError(
@@ -75,6 +77,24 @@ function App() {
     }
   }
 
+  async function handleSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    await performLookup(ip);
+  }
+
+  async function handleMyIpClick() {
+    if (!myIp.trim()) {
+      return;
+    }
+
+    setIp(myIp);
+
+    await performLookup(myIp);
+  }
+
   useEffect(() => {
     if (result && resultRef.current) {
       resultRef.current.scrollIntoView({
@@ -84,16 +104,28 @@ function App() {
     }
   }, [result]);
 
-  const [loadingDots, setLoadingDots] = useState(".");
-
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingDots((dots) =>
-        dots.length === 3 ? "" : dots + "."
+        dots.length === 3 ? "" : dots + ".",
       );
     }, 400);
 
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    async function loadMyIp() {
+      try {
+        const userIp = await getMyIp();
+
+        setMyIp(userIp);
+      } catch (error) {
+        console.error("Failed to get user IP:", error);
+      }
+    }
+
+    loadMyIp();
   }, []);
 
   return (
@@ -107,6 +139,18 @@ function App() {
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
             Quickly discover approximate geographic information
             associated with an IP address.
+          </p>
+
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+            Your IP address:{" "}
+            <button
+              type="button"
+              onClick={handleMyIpClick}
+              disabled={loading || !myIp}
+              className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {myIp}
+            </button>
           </p>
         </header>
 
@@ -123,9 +167,9 @@ function App() {
               <input
                 type="text"
                 value={ip}
-                onChange={(event) =>
-                  setIp(event.target.value)
-                }
+                onChange={(event) => {
+                  setIp(event.target.value);
+                }}
                 placeholder="Enter an IP address..."
                 className="w-full bg-transparent py-3.5 text-sm text-white outline-none placeholder:text-slate-600 sm:text-base"
               />
@@ -178,7 +222,6 @@ function App() {
               <div className="modern-status text-xs font-medium text-slate-400">
                 Lookup successful
               </div>
-
             </div>
 
             <div className="grid gap-2.5 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-3">
@@ -198,11 +241,14 @@ function App() {
                 </p>
 
                 <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-slate-200">
-                  <CountryFlag countryCode={result.country.code} />
+                  <CountryFlag
+                    countryCode={result.country.code}
+                  />
 
                   <span>
                     {result.country.name || "Unknown"}
-                    {result.country.code && ` (${result.country.code})`}
+                    {result.country.code &&
+                      ` (${result.country.code})`}
                   </span>
                 </div>
               </div>
@@ -250,26 +296,24 @@ function App() {
                   {result.location.longitude ?? ""}
                 </p>
               </div>
-
-
             </div>
 
             {result.location.latitude !== null &&
-              result.location.longitude !== null && (<div className="px-5 pb-5 sm:px-6 sm:pb-6"> <div className="modern-map-header mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider"> <span className="modern-map-dot h-2 w-2 rounded-full" />
-                Approximate Location </div>
+              result.location.longitude !== null && (
+                <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+                  <div className="modern-map-header mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider">
+                    <span className="modern-map-dot h-2 w-2 rounded-full" />
+                    Approximate Location
+                  </div>
 
-
-                <IpMap
-                  latitude={result.location.latitude}
-                  longitude={result.location.longitude}
-                  ip={result.ip}
-                />
-              </div>
+                  <IpMap
+                    latitude={result.location.latitude}
+                    longitude={result.location.longitude}
+                    ip={result.ip}
+                  />
+                </div>
               )}
-
-
           </section>
-
         )}
 
         <footer className="mt-10 text-center text-xs text-slate-600">
