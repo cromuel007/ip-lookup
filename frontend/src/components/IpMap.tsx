@@ -44,9 +44,9 @@ function MapAnimation({
 const markerIcon = L.divIcon({
     className: "hand-marker",
     html: `<span class="hand-marker-emoji">👇</span>`,
-    iconSize: [50, 50],
-    iconAnchor: [25, 45],
-    popupAnchor: [0, -40],
+    iconSize: [36, 36],
+    iconAnchor: [18, 32],
+    popupAnchor: [0, -30],
 });
 
 function AnimatedMarker({

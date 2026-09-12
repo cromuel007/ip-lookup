@@ -255,7 +255,7 @@ body {
 
 .hand-marker-emoji {
   display: block;
-  font-size: 42px;
+  font-size: 30px;
   line-height: 1;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45));
   animation: handBounce 900ms ease-in-out infinite;
