@@ -84,7 +84,7 @@ function App() {
   ) {
     event.preventDefault();
     setMyIpClicked(false);
-    
+
     await performLookup(ip);
   }
 
@@ -159,14 +159,20 @@ function App() {
                 </span>
               </>
             ) : (
-              <button
-                type="button"
-                onClick={handleMyIpClick}
-                disabled={loading || !myIp}
-                className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {myIp}
-              </button>
+              <div className="group relative inline-block">
+                <button
+                  type="button"
+                  onClick={handleMyIpClick}
+                  disabled={loading || !myIp}
+                  className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {myIp}
+                </button>
+
+                <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-800 px-2.5 py-1.5 text-xs text-slate-200 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  Click to see your details
+                </span>
+              </div>
             )}
           </p>
         </header>
