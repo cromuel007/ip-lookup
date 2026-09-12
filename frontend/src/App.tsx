@@ -48,6 +48,7 @@ function App() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [findingIp, setFindingIp] = useState(false);
   const [loadingDots, setLoadingDots] = useState(".");
   const resultRef = useRef<HTMLElement | null>(null);
 
@@ -116,12 +117,16 @@ function App() {
 
   useEffect(() => {
     async function loadMyIp() {
+      setFindingIp(true);
+
       try {
         const userIp = await getMyIp();
 
         setMyIp(userIp);
       } catch (error) {
         console.error("Failed to get user IP:", error);
+      } finally {
+        setFindingIp(false);
       }
     }
 
@@ -142,7 +147,7 @@ function App() {
           </p>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
-            {loading ? (
+            {findingIp ? (
               <>
                 Finding your IP
                 <span className="inline-block w-[18px] text-left">
@@ -155,7 +160,7 @@ function App() {
                 <button
                   type="button"
                   onClick={handleMyIpClick}
-                  disabled={!myIp}
+                  disabled={loading || !myIp}
                   className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {myIp}
