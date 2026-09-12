@@ -83,7 +83,10 @@ function App() {
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
-    setMyIpClicked(false);
+
+    setMyIpClicked(
+      !!myIp && ip.trim() === myIp.trim(),
+    );
 
     await performLookup(ip);
   }
