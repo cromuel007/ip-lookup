@@ -142,15 +142,26 @@ function App() {
           </p>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
-            Your IP address:{" "}
-            <button
-              type="button"
-              onClick={handleMyIpClick}
-              disabled={loading || !myIp}
-              className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {myIp}
-            </button>
+            {loading ? (
+              <>
+                Finding your IP
+                <span className="inline-block w-[18px] text-left">
+                  {loadingDots}
+                </span>
+              </>
+            ) : (
+              <>
+                Your IP address:{" "}
+                <button
+                  type="button"
+                  onClick={handleMyIpClick}
+                  disabled={!myIp}
+                  className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {myIp}
+                </button>
+              </>
+            )}
           </p>
         </header>
 
