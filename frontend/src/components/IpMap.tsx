@@ -122,9 +122,17 @@ function AnimatedMarker({
             <Popup>
                 <div className="px-1 py-1 text-center">
                     <div className="mt-1 text-sm font-bold text-slate-900">
-                        {myIpClicked
-                            ? "Your stash is here. 🤫"
-                            : "We found the suspect! 🧐"}
+                        {myIpClicked ? (
+                            <>
+                                Your stash is here.{" "}
+                                <span className="text-xl">🤫</span>
+                            </>
+                        ) : (
+                            <>
+                                We found the suspect!{" "}
+                                <span className="text-xl">🧐</span>
+                            </>
+                        )}
                     </div>
 
                     <div className="mt-1 text-xs text-slate-500">
