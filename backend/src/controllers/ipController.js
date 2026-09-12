@@ -1,5 +1,13 @@
 import { lookupIp } from "../services/ipService.js";
 
+export async function getMyIp(req, res) {
+  const ip = req.ip;
+
+  return res.json({
+    ip,
+  });
+}
+
 export async function getIpLookup(req, res) {
   try {
     const { ip } = req.params;
