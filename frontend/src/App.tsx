@@ -51,6 +51,7 @@ function App() {
   const [findingIp, setFindingIp] = useState(false);
   const [loadingDots, setLoadingDots] = useState(".");
   const resultRef = useRef<HTMLElement | null>(null);
+  const [myIpClicked, setMyIpClicked] = useState(false);
 
   async function performLookup(value: string) {
     const trimmedValue = value.trim();
@@ -82,7 +83,8 @@ function App() {
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
-
+    setMyIpClicked(false);
+    
     await performLookup(ip);
   }
 
@@ -91,6 +93,7 @@ function App() {
       return;
     }
 
+    setMyIpClicked(true);
     setIp(myIp);
 
     await performLookup(myIp);
@@ -324,6 +327,7 @@ function App() {
                     latitude={result.location.latitude}
                     longitude={result.location.longitude}
                     ip={result.ip}
+                    myIpClicked={myIpClicked}
                   />
                 </div>
               )}

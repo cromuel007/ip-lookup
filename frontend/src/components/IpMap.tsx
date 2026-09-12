@@ -7,6 +7,7 @@ interface IpMapProps {
     latitude: number;
     longitude: number;
     ip: string;
+    myIpClicked: boolean;
 }
 
 function MapAnimation({
@@ -53,6 +54,7 @@ function AnimatedMarker({
     latitude,
     longitude,
     ip,
+    myIpClicked,
 }: IpMapProps) {
     const map = useMap();
 
@@ -120,7 +122,9 @@ function AnimatedMarker({
             <Popup>
                 <div className="px-1 py-1 text-center">
                     <div className="mt-1 text-sm font-bold text-slate-900">
-                        We found the suspect! 🧐
+                        {myIpClicked
+                            ? "That's you! 👀"
+                            : "We found the suspect! 🧐"}
                     </div>
 
                     <div className="mt-1 text-xs text-slate-500">
@@ -136,6 +140,7 @@ export default function IpMap({
     latitude,
     longitude,
     ip,
+    myIpClicked,
 }: IpMapProps) {
     return (
         <div className="mt-8 overflow-hidden rounded-xl border border-slate-800">
@@ -159,6 +164,7 @@ export default function IpMap({
                     latitude={latitude}
                     longitude={longitude}
                     ip={ip}
+                    myIpClicked={myIpClicked}
                 />
             </MapContainer>
         </div>
