@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -41,16 +41,12 @@ function MapAnimation({
     return null;
 }
 
-const markerIcon = L.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-    iconRetinaUrl:
-        "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-    shadowUrl:
-        "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+const markerIcon = L.divIcon({
+    className: "hand-marker",
+    html: `<span class="hand-marker-emoji">👇</span>`,
+    iconSize: [50, 50],
+    iconAnchor: [25, 45],
+    popupAnchor: [0, -40],
 });
 
 function AnimatedMarker({
@@ -59,6 +55,8 @@ function AnimatedMarker({
     ip,
 }: IpMapProps) {
     const map = useMap();
+
+    const markerRef = useRef<L.Marker | null>(null);
 
     useEffect(() => {
         const markerElement = document.querySelector(
@@ -71,18 +69,36 @@ function AnimatedMarker({
 
         markerElement.style.opacity = "0";
         markerElement.style.transformOrigin = "bottom center";
-        markerElement.style.transform = "translateY(-100px) scale(0.5)";
+        markerElement.style.transform =
+            "translateY(-100px) scale(0.5)";
 
         const timeout = window.setTimeout(() => {
             markerElement.style.transition =
                 "transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 300ms ease";
 
             markerElement.style.opacity = "1";
-            markerElement.style.transform = "translateY(0) scale(1)";
+            markerElement.style.transform =
+                "translateY(0) scale(1)";
         }, 2200);
 
         return () => {
             window.clearTimeout(timeout);
+        };
+    }, [map]);
+
+    useEffect(() => {
+        const handleZoomEnd = () => {
+            const marker = markerRef.current;
+
+            if (marker) {
+                marker.openPopup();
+            }
+        };
+
+        map.once("zoomend", handleZoomEnd);
+
+        return () => {
+            map.off("zoomend", handleZoomEnd);
         };
     }, [map]);
 
@@ -92,8 +108,12 @@ function AnimatedMarker({
             icon={markerIcon}
             zIndexOffset={1000}
             ref={(marker) => {
+                markerRef.current = marker;
+
                 if (marker) {
-                    marker.getElement()?.classList.add("ip-lookup-marker");
+                    marker
+                        .getElement()
+                        ?.classList.add("ip-lookup-marker");
                 }
             }}
         >
