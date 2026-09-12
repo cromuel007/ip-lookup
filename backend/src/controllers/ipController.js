@@ -1,7 +1,11 @@
 import { lookupIp } from "../services/ipService.js";
 
 export async function getMyIp(req, res) {
-  const ip = req.ip;
+  const forwardedFor = req.headers["x-forwarded-for"];
+
+  const ip = forwardedFor
+    ? forwardedFor.split(",")[0].trim()
+    : req.ip;
 
   return res.json({
     ip,
