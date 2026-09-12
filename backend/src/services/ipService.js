@@ -48,7 +48,7 @@ export async function lookupIp(ip) {
     throw error;
   }
 
-  console.log(`[IP Lookup] Checking database for: ${ip}`);
+  // console.log(`[IP Lookup] Checking database for: ${ip}`);
 
   const existingLookup = await prisma.ipLookup.findFirst({
     where: {
@@ -57,7 +57,7 @@ export async function lookupIp(ip) {
   });
 
   if (existingLookup) {
-    console.log(`[IP Lookup] Found in database: ${ip}`);
+    // console.log(`[IP Lookup] Found in database: ${ip}`);
 
     return {
       ip: existingLookup.ip,
@@ -75,16 +75,16 @@ export async function lookupIp(ip) {
     };
   }
 
-  console.log(`[IP Lookup] Not found in database. Looking up geoip: ${ip}`);
+  // console.log(`[IP Lookup] Not found in database. Looking up geoip: ${ip}`);
 
   const geo = geoip.lookup(ip);
 
   if (!geo) {
-    console.log(`[IP Lookup] No geolocation found: ${ip}`);
+    // console.log(`[IP Lookup] No geolocation found: ${ip}`);
     return null;
   }
 
-  console.log(`[IP Lookup] Geolocation found: ${ip}`);
+  // console.log(`[IP Lookup] Geolocation found: ${ip}`);
 
   const countryName = geo.country
     ? countryNames.of(geo.country)
@@ -106,7 +106,7 @@ export async function lookupIp(ip) {
     },
   });
 
-  console.log(`[IP Lookup] Saved to database: ${ip}`);
+  // console.log(`[IP Lookup] Saved to database: ${ip}`);
 
   return {
     ip: lookup.ip,
