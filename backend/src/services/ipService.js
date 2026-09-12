@@ -48,11 +48,43 @@ export async function lookupIp(ip) {
     throw error;
   }
 
+  console.log(`[IP Lookup] Checking database for: ${ip}`);
+
+  const existingLookup = await prisma.ipLookup.findFirst({
+    where: {
+      ip,
+    },
+  });
+
+  if (existingLookup) {
+    console.log(`[IP Lookup] Found in database: ${ip}`);
+
+    return {
+      ip: existingLookup.ip,
+      country: {
+        code: existingLookup.country,
+        name: existingLookup.countryName,
+      },
+      region: existingLookup.region,
+      city: existingLookup.city,
+      timezone: existingLookup.timezone,
+      location: {
+        latitude: existingLookup.latitude,
+        longitude: existingLookup.longitude,
+      },
+    };
+  }
+
+  console.log(`[IP Lookup] Not found in database. Looking up geoip: ${ip}`);
+
   const geo = geoip.lookup(ip);
 
   if (!geo) {
+    console.log(`[IP Lookup] No geolocation found: ${ip}`);
     return null;
   }
+
+  console.log(`[IP Lookup] Geolocation found: ${ip}`);
 
   const countryName = geo.country
     ? countryNames.of(geo.country)
@@ -61,28 +93,20 @@ export async function lookupIp(ip) {
   const latitude = geo.ll?.[0] ?? null;
   const longitude = geo.ll?.[1] ?? null;
 
-  // Check if this IP has already been saved.
-  let lookup = await prisma.ipLookup.findFirst({
-    where: {
+  const lookup = await prisma.ipLookup.create({
+    data: {
       ip,
+      country: geo.country ?? null,
+      countryName,
+      region: geo.region || null,
+      city: geo.city || null,
+      timezone: geo.timezone ?? null,
+      latitude,
+      longitude,
     },
   });
 
-  // Only save the IP if it doesn't already exist.
-  if (!lookup) {
-    lookup = await prisma.ipLookup.create({
-      data: {
-        ip,
-        country: geo.country ?? null,
-        countryName,
-        region: geo.region || null,
-        city: geo.city || null,
-        timezone: geo.timezone ?? null,
-        latitude,
-        longitude,
-      },
-    });
-  }
+  console.log(`[IP Lookup] Saved to database: ${ip}`);
 
   return {
     ip: lookup.ip,
