@@ -147,6 +147,7 @@ function App() {
           </p>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+            Your IP address:{" "}
             {findingIp ? (
               <>
                 Finding your IP
@@ -155,17 +156,14 @@ function App() {
                 </span>
               </>
             ) : (
-              <>
-                Your IP address:{" "}
-                <button
-                  type="button"
-                  onClick={handleMyIpClick}
-                  disabled={loading || !myIp}
-                  className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {myIp}
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={handleMyIpClick}
+                disabled={loading || !myIp}
+                className="font-medium text-blue-400 underline decoration-blue-400/40 underline-offset-4 transition-colors hover:text-blue-300 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {myIp}
+              </button>
             )}
           </p>
         </header>
