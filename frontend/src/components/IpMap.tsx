@@ -123,7 +123,7 @@ function AnimatedMarker({
                 <div className="px-1 py-1 text-center">
                     <div className="mt-1 text-sm font-bold text-slate-900">
                         {myIpClicked
-                            ? "That's you! 👀"
+                            ? "Ahh… so THIS is where you keep your stash. 🤫"
                             : "We found the suspect! 🧐"}
                     </div>
 
