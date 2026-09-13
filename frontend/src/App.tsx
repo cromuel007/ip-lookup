@@ -346,8 +346,7 @@ function App() {
         <footer className="mt-10 text-center text-xs text-slate-600">
           © {new Date().getFullYear()}{" "}
           <a
-            href="https://www.linkedin.com/in/cromuel/"
-            target="_blank"
+            href="https://tubbylab.com"
             rel="noopener noreferrer"
             className="transition-colors hover:text-slate-300"
           >
