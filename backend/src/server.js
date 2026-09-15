@@ -40,12 +40,12 @@ app.use(limiter);
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
-    message: "IP Lookup API is running 🚀",
+    message: "🚀 IP Lookup API running",
   });
 });
 
 app.use("/api/ip", ipRoutes);
 
 app.listen(PORT, () => {
-  console.log(`IP Lookup API running on http://localhost:${PORT}`);
+  console.log(`🚀 IP Lookup API running on port ${PORT}`);
 });
