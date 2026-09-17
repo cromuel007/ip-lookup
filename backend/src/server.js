@@ -40,7 +40,7 @@ app.use(limiter);
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
-    message: "🚀 IP Lookup API running",
+    message: "🚀 IP Lookup API running 👍",
   });
 });
 
